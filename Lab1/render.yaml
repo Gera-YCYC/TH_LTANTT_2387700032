@@ -1,0 +1,9 @@
+services:
+- type: web
+  name: securevalidator
+  runtime: python
+  buildCommand: pip install -r requirements.txt
+  startCommand: "gunicorn app:app" 
+  plans: free
+  ports:
+    - "80:80"
