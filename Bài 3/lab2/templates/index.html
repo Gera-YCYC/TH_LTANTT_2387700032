@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>NetRecon | Authorized inventory</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <main class="shell">
+    <header class="topbar"><span class="mark">NR</span><span>NETWORK INVENTORY / LOCAL LAB</span></header>
+    <section class="intro">
+      <p class="eyebrow">BÀI 3 · LAB 2</p>
+      <h1>NetRecon</h1>
+      <p class="lede">TCP service inventory for a single authorized private host.</p>
+    </section>
+    <section class="workspace" aria-label="Scan controls and report">
+      <form action="{{ url_for('scan') }}" method="post" class="controls">
+        <label for="target">Private or loopback IP</label>
+        <input id="target" name="target" inputmode="decimal" placeholder="127.0.0.1" required>
+        <label for="ports">TCP ports</label>
+        <input id="ports" name="ports" value="22,80,443" required>
+        <p class="hint">Up to 32 ports; maximum concurrency is 3 in the web interface.</p>
+        <label class="consent"><input type="checkbox" name="authorized" value="yes" required> I own this host or have explicit permission to test it.</label>
+        <button type="submit">Run inventory <span aria-hidden="true">→</span></button>
+      </form>
+      <section class="results" aria-live="polite">
+        {% if error %}<p class="error">{{ error }}</p>{% endif %}
+        {% if report %}
+          <p class="eyebrow">REPORT</p>
+          {% for title, content in report.items() %}
+            <h2>{{ title|capitalize }}</h2>
+            <pre>{{ content|tojson(indent=2) }}</pre>
+          {% endfor %}
+        {% else %}
+          <div class="empty"><span class="pulse"></span><p>Waiting for an authorized scan.</p></div>
+        {% endif %}
+      </section>
+    </section>
+    <footer>Connect scans only · No host discovery · No stealth or exploit checks · Runs on localhost</footer>
+  </main>
+</body>
+</html>
