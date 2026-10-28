@@ -19,3 +19,9 @@ Thuc hanh Lap trinh An ninh thong tin - 2387700032 - Le Dang Khoa
 - [Lab 1: Static Analysis Security Testing (sast-tool)](Bài%205/lab1/README.md)
 - [Lab 2: Dynamic Analysis Security Testing (dast-tool)](Bài%205/lab2/README.md)
 
+## Bài 6
+
+- [Báo cáo và hướng dẫn Bài 6](Bài%206/README.md)
+- [Lab 1: Basic GitLab CI/CD Pipeline](Bài%206/lab1/README.md)
+- [Lab 2: Complex Pipeline with Docusaurus & DevSecOps Security Gate](Bài%206/lab2/README.md)
+

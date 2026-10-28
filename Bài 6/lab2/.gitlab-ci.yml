@@ -1,0 +1,46 @@
+# GitLab CI/CD Pipeline - Lab 2: Multi-stage Complex Pipeline with GitLab Pages & DevSecOps Security Gate
+# Môn học: Lập trình An ninh thông tin - Bài 6: Bảo mật với DevSecOps (Mục 6.2.2)
+
+stages:
+  - build
+  - security
+  - deploy
+
+# 1. Build Stage: Biên dịch và đóng gói mã nguồn Docusaurus
+build-job:
+  stage: build
+  image: node:18-alpine
+  script:
+    - echo "=== Bắt đầu cài đặt phụ thuộc và build Docusaurus ==="
+    - npm install
+    - npm run build
+  artifacts:
+    name: "docusaurus-build-artifacts"
+    expire_in: 1 week
+    paths:
+      - "build/"
+
+# 2. Security Stage: DevSecOps Security Gates (SAST & Secret Scanning & SCA)
+security-scan:
+  stage: security
+  image: python:3.11-slim
+  script:
+    - echo "=== Kích hoạt Security Gate: Quét rò rỉ bí mật và phân tích phụ thuộc ==="
+    - python security_gates/security_checker.py --target .
+  dependencies:
+    - build-job
+
+# 3. Deploy Stage: Triển khai website tài liệu lên GitLab Pages
+pages:
+  stage: deploy
+  image: alpine:latest
+  script:
+    - echo "=== Triển khai website lên GitLab Pages ==="
+    - mv build/ public/
+  artifacts:
+    paths:
+      - "public/"
+  dependencies:
+    - build-job
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
